@@ -7,7 +7,7 @@ A tool that adjusts the FileSizeList.txt and DecompressedSizeList.txt of Twiligh
 * You will be asked whether you want to:
     Adjust the filesize for all files aside from files located in **Stage** folder.
     or
-    Adjust the filesize for files located inside of a folder in **Stage** folder (such as **F_SP104**. continue from step .)
+    Adjust the filesize for files located inside of a folder in **Stage** folder (such as **F_SP104**).
 * Input 0 if you want to adjust the filesize for all files aside from **Stage** folder files.
 * Once it finishes, press `ENTER` to exit the tool.
 * Input 1 if you want to adjust the filesize for files inside a specific folder within **Stage** folder.
