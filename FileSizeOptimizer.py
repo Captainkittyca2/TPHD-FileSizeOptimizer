@@ -25,7 +25,9 @@ gum = 0
 fyle.seek(0)
 choice = int(input("Enter 0 to adjust filesize for nearly all files except stage files. Or enter 1 to adjust filesize for a specific stage: "))
 if choice > 1 or choice < 0:
-    print("Unacceptable input. Exiting...")
+    shutil.move("FileSizeList.txt", "content/FileSizeList.txt")
+    shutil.move("FileSizeList.txt.bak", "content/FileSizeList.txt.bak")
+    input("Unacceptable input. Press ENTER to close...")
     exit()
 
 def packin_GZs(x):
@@ -214,10 +216,13 @@ try:
                     sunset = fayle.find(baytes, offset+N, 200000)
                 #print(baytes, N, n)
                 if bun < gum:                                                                   # How many files in that folder to check filesize (based on how many from that folder are next to each other in offset of FileSizeList.txt)
-                    if num == 33:
+                    if num < 31:
+                        offset = fayle.find(baytes, offset+N, 200000)                               # offset that contains beginning of extension for the file
+                    elif num == 33:
                         offset = sunset
                     else:
-                        offset = fayle.find(baytes, offset+N, 200000)                               # offset that contains beginning of extension for the file
+                        offset = fayle.find(bytes(y[0], 'ascii'), offset, 200000)
+                        offset = fayle.find(baytes, offset+N, 200000)
                     print("---------------------------\noffset: ",offset + n)
                     a = offset + n
                     offsat = fayle.find(b'\x00', offset+n, 200000)                              # offset right after the file's filesize value
@@ -277,6 +282,34 @@ try:
                     fyle.seek(0)
                     fayle = fyle.read()
                 bun += 1
+        # For DecompressedSizeList.txt
+        os.chdir("../../..")
+        offset = 0
+        lyle = os.path.abspath(os.curdir)
+        print("*********************************                *********************************                *********************************                *********************************\n----------------------------",lyle,"----------------------------\n*********************************                *********************************                *********************************                *********************************")
+        y = os.path.splitext("DecompressedSizeList.txt")
+        N = len(bytes(y[1], 'ascii'))
+        baytes = bytes(y[1], 'ascii')
+        n = N+1
+        offset = fayle.find(bytes(y[0], 'ascii'), offset, 200000)
+        offset = fayle.find(baytes, offset+N, 200000)
+        print("---------------------------\noffset: ",offset + n)
+        a = offset + n
+        offsat = fayle.find(b'\x00', offset+n, 200000)
+        fyle.seek(offset+n)
+        fyleSize = int(fyle.read(offsat-(offset+n)))
+        boi = fyle.read()
+
+        lyleSize = os.path.getsize(f"{lyle}/DecompressedSizeList.txt")
+        print(f"\nDecompressedSizeList.txt filesize: ", lyleSize)
+        if lyleSize != fyleSize:
+            print(f"\n\nUPDATING DecompressedSizeList.txt's filesize in FileSizeList.txt!\n")
+            fyle.seek(a)
+            fyle.truncate()
+            fyle.write(bytes(str(lyleSize), 'ascii'))
+            fyle.write(boi)
+            fyle.seek(0)
+            fayle = fyle.read()
         num += 1
         bun = 0
 
@@ -284,8 +317,6 @@ except ValueError:
     print("Done!")
 fyle.close()
 os.chdir("..")
-if choice == 1:
-    os.chdir("../../..")
 shutil.move("FileSizeList.txt", "content/FileSizeList.txt")
 shutil.move("FileSizeList.txt.bak", "content/FileSizeList.txt.bak")
 input("Press ENTER to close...")
