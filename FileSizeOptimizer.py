@@ -85,7 +85,7 @@ def packin_GZs(x):
         os.chdir(der)
 try:
     if choice == 0:
-        while (num <= 33):
+        while (num <= 32):
             if num == 0:
                 os.chdir("./content/Audiores/Seqs")
                 gum = 1
@@ -172,9 +172,6 @@ try:
             elif num == 32:
                 os.chdir("./tex/Particle")
                 gum = 66
-            elif num == 33:
-                os.chdir("../..")
-                gum = 1
             lyle = os.path.abspath(os.curdir)
             print("*********************************                *********************************                *********************************                *********************************\n----------------------------",lyle,"----------------------------\n*********************************                *********************************                *********************************                *********************************")
             bossfolder = os.listdir(lyle)
@@ -194,32 +191,15 @@ try:
                 bossfolder.pop(1)
                 #bossfolder = bossfolder.pop(-2)
                 print(bossfolder)
-            elif num == 33:
-                bossfolder.pop(0)
-                bossfolder.pop(0)
-                bossfolder.pop(0)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                bossfolder.pop(1)
-                #bossfolder = bossfolder.pop(3)
             for basename in filter(os.path.isfile, bossfolder):
                 y = os.path.splitext(basename)
                 N = len(bytes(y[1], 'ascii'))                                                   # how many digits the extension name is (including the ".")
                 baytes = bytes(y[1], 'ascii')                                                   # bytes of the extension
                 n = N+1                                                                         # offset right before the size value
-                if y[0] == "DecompressedSizeList":
-                    sunset = fayle.find(baytes, offset+N, 200000)
                 #print(baytes, N, n)
                 if bun < gum:                                                                   # How many files in that folder to check filesize (based on how many from that folder are next to each other in offset of FileSizeList.txt)
                     if num < 31:
                         offset = fayle.find(baytes, offset+N, 200000)                               # offset that contains beginning of extension for the file
-                    elif num == 33:
-                        offset = sunset
                     else:
                         offset = fayle.find(bytes(y[0], 'ascii'), offset, 200000)
                         offset = fayle.find(baytes, offset+N, 200000)
@@ -282,36 +262,38 @@ try:
                     fyle.seek(0)
                     fayle = fyle.read()
                 bun += 1
-        # For DecompressedSizeList.txt
-        os.chdir("../../..")
-        offset = 0
-        lyle = os.path.abspath(os.curdir)
-        print("*********************************                *********************************                *********************************                *********************************\n----------------------------",lyle,"----------------------------\n*********************************                *********************************                *********************************                *********************************")
-        y = os.path.splitext("DecompressedSizeList.txt")
-        N = len(bytes(y[1], 'ascii'))
-        baytes = bytes(y[1], 'ascii')
-        n = N+1
-        offset = fayle.find(bytes(y[0], 'ascii'), offset, 200000)
-        offset = fayle.find(baytes, offset+N, 200000)
-        print("---------------------------\noffset: ",offset + n)
-        a = offset + n
-        offsat = fayle.find(b'\x00', offset+n, 200000)
-        fyle.seek(offset+n)
-        fyleSize = int(fyle.read(offsat-(offset+n)))
-        boi = fyle.read()
+    # For DecompressedSizeList.txt
+    if choice == 1:
+        os.chdir("..")
+    os.chdir("../..")
+    offset = 0
+    lyle = os.path.abspath(os.curdir)
+    print("*********************************                *********************************                *********************************                *********************************\n----------------------------",lyle,"----------------------------\n*********************************                *********************************                *********************************                *********************************")
+    y = os.path.splitext("DecompressedSizeList.txt")
+    N = len(bytes(y[1], 'ascii'))
+    baytes = bytes(y[1], 'ascii')
+    n = N+1
+    offset = fayle.find(bytes(y[0], 'ascii'), offset, 200000)
+    offset = fayle.find(baytes, offset+N, 200000)
+    print("---------------------------\noffset: ",offset + n)
+    a = offset + n
+    offsat = fayle.find(b'\x00', offset+n, 200000)
+    fyle.seek(offset+n)
+    fyleSize = int(fyle.read(offsat-(offset+n)))
+    boi = fyle.read()
 
-        lyleSize = os.path.getsize(f"{lyle}/DecompressedSizeList.txt")
-        print(f"\nDecompressedSizeList.txt filesize: ", lyleSize)
-        if lyleSize != fyleSize:
-            print(f"\n\nUPDATING DecompressedSizeList.txt's filesize in FileSizeList.txt!\n")
-            fyle.seek(a)
-            fyle.truncate()
-            fyle.write(bytes(str(lyleSize), 'ascii'))
-            fyle.write(boi)
-            fyle.seek(0)
-            fayle = fyle.read()
-        num += 1
-        bun = 0
+    lyleSize = os.path.getsize(f"{lyle}/DecompressedSizeList.txt")
+    print(f"\nDecompressedSizeList.txt filesize: ", lyleSize)
+    if lyleSize != fyleSize:
+        print(f"\n\nUPDATING DecompressedSizeList.txt's filesize in FileSizeList.txt!\n")
+        fyle.seek(a)
+        fyle.truncate()
+        fyle.write(bytes(str(lyleSize), 'ascii'))
+        fyle.write(boi)
+        fyle.seek(0)
+        fayle = fyle.read()
+    num += 1
+    bun = 0
 
 except ValueError:
     print("Done!")
